@@ -11,6 +11,7 @@ creating a new ticket and adding email id
 ticket.py
 has got all the attributes related to ticket 
 generating password feature
+
 main.py
 consist of all menu which consists of parameter related to staff their id's etc..
 
