@@ -28,14 +28,56 @@ def menuLoad(menu):
 
     return selection
 
+tickCrList = []
+def selectTicketToRespond():
+    print("Available Tickets:")
+    for ticket in tickCrList:
+        print(f"Ticket Number: {ticket.ticket_number}")
+        print(f"Ticket Creator Name: {ticket.tickCrName}")
+        print(f"Status: {ticket.status}")
+        print("\n")
+
+    ticket_number = int(input("Enter the ticket number you want to respond to (0 to cancel): "))
+
+    if ticket_number == 0:
+        return None  # User chose to cancel
+
+    for ticket in tickCrList:
+        if ticket.ticket_number == ticket_number:
+            return ticket
+
+    print("Invalid ticket number. Please try again.")
+
+def generate_password(staffID, tickCrName):
+    # Combine the first two characters of staffID and the first 3 characters of tickCrName
+    new_password = staffID[:2] + tickCrName[:3]
+    return new_password
+# Loop through the list of tickets
+for ticket in tickCrList:
+        if ticket.tickDes == "Password Change" and ticket.status != "Closed":
+            new_password = generate_password(ticket.staffID, ticket.tickCrName)
+            ticket.tickRes = f"Generate New Password: {new_password}"
+            ticket.status = "Closed"
+
 def respondToTicket(ticket):
             if ticket.status == "Closed":
                          print("This ticket is already closed. You cannot respond to it.")
+
+            elif Ticket.tickDes == "Password Change":
+                new_password = Ticket.generate_password()
+
+                response = print(f"Generate New Password: {new_password}")
+                ticket.tickRes = response
+                ticket.status = "Closed"
+                print("Password changed successfully!")
             else:
                response = input("Enter your response: ")
-               ticket.response = response
+               ticket.tickRes = response
+               ticket.status = "Closed"
                print("Response added successfully.")
-               return ticket.status == "Closed"
+
+
+
 
                
 
@@ -46,7 +88,7 @@ def tickSub():
     newEmailID = input("Enter Email ID: ")
     tickDes = input("Enter Description of Issue: ")
 
-    newTick = Ticket(newtickCrName, newStaffID, newEmailID, tickDes, tickStat = False, tickRes= "NOT YET PROVIDED")
+    newTick = Ticket(newtickCrName, newStaffID, newEmailID, tickDes, tickStat = "Open", tickRes= "NOT YET PROVIDED")
 
     tickCrList.append(newTick)
 
@@ -63,7 +105,7 @@ def printingticks():
     if not tickCrList:
         print("No Tickets Available.")
     else:
-        for ticket in tickCrList:
+        for ticket in tickCrList: 
             print(f"Ticket Number: {ticket.ticket_number}\n"
                   f"Ticket Creator Name: {ticket.tickCrName}\n"
                   f"Staff ID: {ticket.staffID}\n"
@@ -111,10 +153,6 @@ tickCrList.extend([tickCrdata01, tickCrdata02, tickCrdata03])
 
 menu1 = ["DISPLAY TICKET STATISTICS", "SUBMIT NEW TICKET","RESPOND TO TICKET", "PRINTING TICKETS"]
 
-
-
-
-
 while True:
     choice1 = menuLoad(menu1)
 
@@ -132,7 +170,10 @@ while True:
       tickSub()
 
     elif choice1 == 3:
-        respondToTicket(ticket)
+        selected_ticket = selectTicketToRespond()
+        if selected_ticket is not None:
+            respondToTicket(selected_ticket)
+
 
     elif choice1 == 4:
         printingticks()
